@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>College Canteen Order Form</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .form-container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 600px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        input[type="text"],
+        select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-size: 16px;
+            margin-top: 5px;
+        }
+        select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-size: 16px;
+            margin-top: 5px;
+        }
+        .order-item {
+            border: 1px solid #ccc;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 4px;
+        }
+        .remove-item {
+            color: #f00;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+        .add-item {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-bottom: 15px;
+        }
+        .add-item:hover {
+            background-color: #45a049;
+        }
+        input[type="submit"] {
+            background-color: #4CAF50;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+        input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <h2>College Canteen Order Form</h2>
+        <form action="process_order.php" method="post" id="order-form">
+            <div id="order-items">
+                <div class="order-item">
+                    <div class="form-group">
+                        <label for="name">Name:</label>
+                        <input type="text" id="name" name="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="category">Category:</label>
+                        <select name="category[]" class="category" onchange="populateSubcategories(this)" required>
+                            <option value="">Select a category</option>
+                            <option value="1">Beverages</option>
+                            <option value="2">Snacks</option>
+                            <option value="3">Main Course</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="subcategory">Subcategory:</label>
+                        <select name="subcategory[]" class="subcategory" required>
+                            <option value="">Select a subcategory</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="quantity">Quantity:</label>
+                        <input type="number" name="quantity[]" min="1" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="additional_info">Additional Information:</label>
+                        <textarea name="additional_info[]" rows="3"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="pickup_time">Pick-up Time:</label>
+                        <select name="pickup_time[]" required>
+                            <option value="">Select pick-up time</option>
+                            <option value="10AM">10 AM</option>
+                            <option value="12PM">12 PM</option>
+                            <option value="2PM">2 PM</option>
+                            <option value="4PM">4 PM</option>
+                        </select>
+                    </div>
+                    <span class="remove-item" onclick="removeOrderItem(this)">Remove</span>
+                </div>
+            </div>
+            <button type="button" class="add-item" onclick="addOrderItem()">Add Another Item</button>
+            <br><br>
+            <input type="submit" value="Place Order">
+        </form>
+    </div>
+
+    <script>
+        function populateSubcategories(selectElement) {
+            var category = selectElement.value;
+            var subcategoryDropdown = selectElement.parentElement.nextElementSibling.querySelector('.subcategory');
+            subcategoryDropdown.innerHTML = '<option value="">Select a subcategory</option>';
+            switch(category) {
+                case '1':
+                    subcategoryDropdown.innerHTML += `
+                        <option value="1">Tea</option>
+                        <option value="2">Coffee</option>
+                        <option value="3">Milk</option>
+                        <option value="4">Lassi</option>
+                        <option value="5">Chaas</option>
+                    `;
+                    break;
+                case '2':
+                    subcategoryDropdown.innerHTML += `
+                        <option value="6">Vada Pav</option>
+                        <option value="7">Samosa Pav</option>
+                        <option value="8">Misal Pav</option>
+                        <option value="9">Samosa Usal</option>
+                        <option value="10">Sandwich</option>
+                    `;
+                    break;
+                case '3':
+                    subcategoryDropdown.innerHTML += `
+                        <option value="11">Chole Bhature</option>
+                        <option value="12">Roti Sabzi</option>
+                        <option value="13">Rice Plate</option>
+                        <option value="14">Pulav</option>
+                        <option value="15">Panner Bhurji</option>
+                    `;
+                    break;
+                default:
+                    subcategoryDropdown.innerHTML = '<option value="">Select a subcategory</option>';
+            }
+        }
+        function addOrderItem() {
+            var orderItemsDiv = document.getElementById('order-items');
+            var orderItemDiv = document.createElement('div');
+            orderItemDiv.className = 'order-item';
+            orderItemDiv.innerHTML = `
+                <div class="form-group">
+                    <label for="name">Name:</label>
+                    <input type="text" id="name" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="category">Category:</label>
+                    <select name="category[]" class="category" onchange="populateSubcategories(this)" required>
+                        <option value="">Select a category</option>
+                        <option value="1">Beverages</option>
+                        <option value="2">Snacks</option>
+                        <option value="3">Main Course</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="subcategory">Subcategory:</label>
+                    <select name="subcategory[]" class="subcategory" required>
+                        <option value="">Select a subcategory</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="quantity">Quantity:</label>
+                    <input type="number" name="quantity[]" min="1" required>
+                </div>
+                <div class="form-group">
+                    <label for="additional_info">Additional Information:</label>
+                    <textarea name="additional_info[]" rows="3"></textarea>
+                </div>
+                </div>
+                <div class="form-group">
+                    <label for="pickup_time">Pick-up Time:</label>
+                    <select name="pickup_time[]" required>
+                        <option value="">Select pick-up time</option>
+                        <option value="10AM">10 AM</option>
+                        <option value="12PM">12 PM</option>
+                        <option value="2PM">2 PM</option>
+                        <option value="4PM">4 PM</option>
+                    </select>
+                </div>
+                <span class="remove-item" onclick="removeOrderItem(this)">Remove</span>
+            `;
+            orderItemsDiv.appendChild(orderItemDiv);
+        }
+        function removeOrderItem(item) {
+            var orderItemDiv = item.parentElement;
+            orderItemDiv.remove();
+        }
+    </script>
+</body>
+</html>
